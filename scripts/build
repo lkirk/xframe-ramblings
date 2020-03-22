@@ -1,0 +1,30 @@
+#!/bin/sh
+set -exu
+
+REPO_TOP=$(cd -- "$(dirname -- "$0")/.." && pwd)
+BUILD_DIR="$REPO_TOP/build"
+SRC_DIR="$REPO_TOP/3rd"
+
+if [ ! -d $SRC_DIR ]; then
+    mkdir "$SRC_DIR"
+fi
+cd "$SRC_DIR"
+for pkg in xtl xtensor xframe xsimd; do
+    if [ ! -d $pkg ]; then
+        git clone https://github.com/xtensor-stack/$pkg
+
+        cd $pkg
+        mkdir build
+
+        cd build
+        cmake -D CMAKE_INSTALL_PREFIX="$BUILD_DIR" ..
+
+        make install
+        cd "$SRC_DIR"
+    fi
+
+done
+
+cd $BUILD_DIR
+cmake -D "CMAKE_PREFIX_PATH=$BUILD_DIR" ..
+make

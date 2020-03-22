@@ -1,0 +1,5 @@
+#!/bin/sh
+set -x
+REPO_TOP=$(cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$REPO_TOP"
+rm -rf 3rd build
